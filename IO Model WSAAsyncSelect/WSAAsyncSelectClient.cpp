@@ -1,4 +1,4 @@
-// ÃÖ½Å VC++ ÄÄÆÄÀÏ·¯¿¡¼­ °æ°í ¹× ¿À·ù ¹æÁö
+// ìµœì‹  VC++ ì»´íŒŒì¼ëŸ¬ì—ì„œ ê²½ê³  ë° ì˜¤ë¥˜ ë°©ì§€
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include <WinSock2.h>
@@ -10,7 +10,7 @@
 
 using namespace std;
 
-// À©¼Ó2 ¶óÀÌºê·¯¸®
+// ìœˆì†2 ë¼ì´ë¸ŒëŸ¬ë¦¬
 #pragma comment(lib, "ws2_32")
 
 const unsigned short BUFSIZE = 512;
@@ -19,7 +19,7 @@ const string IP = "127.0.0.1";
 
 HWND hWnd;
 
-// ¼ÒÄÏ ÇÔ¼ö ¿À·ù Ãâ·Â
+// ì†Œì¼“ í•¨ìˆ˜ ì˜¤ë¥˜ ì¶œë ¥
 void err_display(const char* const cpcMSG)
 {
 	 LPVOID lpMsgBuf = nullptr;
@@ -39,13 +39,13 @@ void err_display(const char* const cpcMSG)
 	 LocalFree(lpMsgBuf);
 }
 
-// ¼ÒÄÏ ¸Ş¼¼Áö
+// ì†Œì¼“ ë©”ì„¸ì§€
 #define WM_SOCKET (WM_USER + 10)
 
-// »ç¿ëµÇ´Â Àü¿ª º¯¼ö
-vector< SOCKET > g_vecClients;                 // ÀÌ ¸Å°³º¯¼ö ÇÏ³ª´Â, ÇÑ ¸íÀÇ Å¬¶óÀÌ¾ğÆ®( À¯Àú ) ¸¦ ¶æ ÇÔ.
+// ì‚¬ìš©ë˜ëŠ” ì „ì—­ ë³€ìˆ˜
+vector< SOCKET > g_vecClients;                 // ì´ ë§¤ê°œë³€ìˆ˜ í•˜ë‚˜ëŠ”, í•œ ëª…ì˜ í´ë¼ì´ì–¸íŠ¸( ìœ ì € ) ë¥¼ ëœ» í•¨.
 
-// wouldblock ¸Ş¼¼Áö Ã³¸®¿ë ±¸Á¶Ã¼ 
+// wouldblock ë©”ì„¸ì§€ ì²˜ë¦¬ìš© êµ¬ì¡°ì²´ 
 struct WBMessageInfo
 {
 	 const char* Message;
@@ -56,21 +56,21 @@ queue<WBMessageInfo> g_WBQueue;
 //queue<const char*> g_WBMessageQueue;
 //queue<SOCKET> g_WBSocketQueue;
 
-// »ç¿ëµÉ Àü¿ª º¯¼öµé
+// ì‚¬ìš©ë  ì „ì—­ ë³€ìˆ˜ë“¤
 CRITICAL_SECTION    g_CS;
 SOCKET              g_server_sock = INVALID_SOCKET;
 BOOL                bExit = FALSE;
 
-// »ç¿ëµÇ´Â ÇÔ¼öµé
-void BroadcastPacket(const char* const cpcPacket); // ¿¬°áµÈ ¸ğµç Å¬¶óÀÌ¾ğÆ®¿¡°Ô ÆĞÅ¶À» Àü¼Û
-BOOL AddSocket(SOCKET socket);                    // ÇØ´ç ¼ÒÄÏÀ» vector ¿¡ µî·Ï
-BOOL RemoveSocket(SOCKET socket);                 // ÇØ´ç ¼ÒÄÏÀ» vector ¿¡¼­ Á¾·á Ã³¸®ÇÏ°í Á¦°Å
+// ì‚¬ìš©ë˜ëŠ” í•¨ìˆ˜ë“¤
+void BroadcastPacket(const char* const cpcPacket); // ì—°ê²°ëœ ëª¨ë“  í´ë¼ì´ì–¸íŠ¸ì—ê²Œ íŒ¨í‚·ì„ ì „ì†¡
+BOOL AddSocket(SOCKET socket);                    // í•´ë‹¹ ì†Œì¼“ì„ vector ì— ë“±ë¡
+BOOL RemoveSocket(SOCKET socket);                 // í•´ë‹¹ ì†Œì¼“ì„ vector ì—ì„œ ì¢…ë£Œ ì²˜ë¦¬í•˜ê³  ì œê±°
 void DrawMessage(const char* msg);
 
-// À©µµ¿ì ÇÁ·Î½ÃÀú
+// ìœˆë„ìš° í”„ë¡œì‹œì €
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-// À©µµ¿ì ¿£Æ®¸® Æ÷ÀÎÆ®
+// ìœˆë„ìš° ì—”íŠ¸ë¦¬ í¬ì¸íŠ¸
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	 UNREFERENCED_PARAMETER(hPrevInstance);
@@ -78,16 +78,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	 char szBuffer[BUFSIZE] = { 0, };
 
-	 // À©¼Ó ÃÊ±âÈ­
+	 // ìœˆì† ì´ˆê¸°í™”
 	 WSADATA wsa;
 	 if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 	 {
-		  sprintf_s(szBuffer, "[TCP Å¬¶óÀÌ¾ğÆ®] ¿¡·¯ ¹ß»ı -- WSAStartup() :");
+		  sprintf_s(szBuffer, "[TCP í´ë¼ì´ì–¸íŠ¸] ì—ëŸ¬ ë°œìƒ -- WSAStartup() :");
 		  err_display(szBuffer);
 		  return -1;
 	 }
 
-	 // À©µµ¿ì Å¬·¡½º µî·Ï
+	 // ìœˆë„ìš° í´ë˜ìŠ¤ ë“±ë¡
 	 WNDCLASSEX wcex;
 	 ZeroMemory(&wcex, sizeof(wcex));
 	 wcex.cbSize = sizeof(wcex);
@@ -101,7 +101,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	 ATOM ret = RegisterClassEx(&wcex);
 	 assert(0 != ret);
 
-	 // À©µµ¿ì »ı¼º
+	 // ìœˆë„ìš° ìƒì„±
 
 	 hWnd = CreateWindow("AsyncSelectClient",
 		  "AsyncSelectClient",
@@ -119,7 +119,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	 ShowWindow(hWnd, SW_SHOWNORMAL);
 	 UpdateWindow(hWnd);
 
-	 DrawMessage("[TCP Å¬¶óÀÌ¾ğÆ®] »ı¼º");
+	 DrawMessage("[TCP í´ë¼ì´ì–¸íŠ¸] ìƒì„±");
 
 	 MSG msg;
 	 while (GetMessage(&msg, nullptr, 0, 0))
@@ -128,10 +128,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		  DispatchMessage(&msg);
 	 }
 
-	 // À©¼Ó Á¾·á
+	 // ìœˆì† ì¢…ë£Œ
 	 WSACleanup();
 
-	 sprintf_s(szBuffer, "[TCP Å¬¶óÀÌ¾ğÆ®] Á¾·á\n");
+	 sprintf_s(szBuffer, "[TCP í´ë¼ì´ì–¸íŠ¸] ì¢…ë£Œ\n");
 	 DrawMessage(szBuffer);
 	 OutputDebugString(szBuffer);
 
@@ -150,13 +150,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				WSADATA wsa;
 				if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 				{
-					 sprintf_s(szBuffer, "[TCP Å¬¶óÀÌ¾ğÆ®] ¿¡·¯¹ß»ı -- WSAStartup() : ");
+					 sprintf_s(szBuffer, "[TCP í´ë¼ì´ì–¸íŠ¸] ì—ëŸ¬ë°œìƒ -- WSAStartup() : ");
 					 err_display(szBuffer);
 					 return -1;
 				}
 
 				printf_s("============================\n");
-				printf_s(" ÇÁ·Î±×·¥ Á¾·á Å°¿öµå -> exit\n");
+				printf_s(" í”„ë¡œê·¸ë¨ ì¢…ë£Œ í‚¤ì›Œë“œ -> exit\n");
 				printf_s("============================\n");
 
 
@@ -165,7 +165,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				if (INVALID_SOCKET == server_sock)
 				{
-					 sprintf_s(szBuffer, "[TCP Å¬¶óÀÌ¾ğÆ®] ¿¡·¯ ¹ß»ı -- socket() :");
+					 sprintf_s(szBuffer, "[TCP í´ë¼ì´ì–¸íŠ¸] ì—ëŸ¬ ë°œìƒ -- socket() :");
 					 err_display(szBuffer);
 
 					 WSACleanup();
@@ -180,7 +180,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				serveraddr.sin_addr.s_addr = inet_addr(IP.c_str());
 				if (SOCKET_ERROR == connect(server_sock, reinterpret_cast<SOCKADDR*>(&serveraddr), sizeof(serveraddr)))
 				{
-					 sprintf_s(szBuffer, "[TCP Å¬¶óÀÌ¾ğÆ®] ¿¡·¯ ¹ß»ı -- connect() :");
+					 sprintf_s(szBuffer, "[TCP í´ë¼ì´ì–¸íŠ¸] ì—ëŸ¬ ë°œìƒ -- connect() :");
 					 err_display(szBuffer);
 
 					 closesocket(server_sock);
@@ -189,7 +189,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					 return -1;
 				}
 
-				printf_s("[TCP Å¬¶óÀÌ¾ğÆ®] ¼­¹ö¿Í ¿¬°áÀÌ µÇ¾ú½À´Ï´Ù.\n");
+				printf_s("[TCP í´ë¼ì´ì–¸íŠ¸] ì„œë²„ì™€ ì—°ê²°ì´ ë˜ì—ˆìŠµë‹ˆë‹¤.\n");
 
 				break;
 		  }
@@ -198,29 +198,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		  {
 				case FD_READ:
 				{
-					 printf_s("Àü¼ÛÇÒ ¹®ÀÚ¿­ ÀÔ·Â : ");
+					 printf_s("ì „ì†¡í•  ë¬¸ìì—´ ì…ë ¥ : ");
 
-					 // »ç¿ëÀÚ ÀÔ·Â ¹Ş±â
+					 // ì‚¬ìš©ì ì…ë ¥ ë°›ê¸°
 					 string strBuffer;
 					 getline(cin, strBuffer);
 					 size_t nLength = strBuffer.size();
 
-					 // ÀÔ·ÂµÈ ¹®ÀÚ¿­ÀÌ ¾øÀ½
+					 // ì…ë ¥ëœ ë¬¸ìì—´ì´ ì—†ìŒ
 					 if (0 == nLength)
 					 {
-						  printf_s("-> ÀÔ·ÂµÈ ¹®ÀÚ¿­ÀÌ ¾ø½À´Ï´Ù.\n");
+						  printf_s("-> ì…ë ¥ëœ ë¬¸ìì—´ì´ ì—†ìŠµë‹ˆë‹¤.\n");
 						  //continue;
 					 }
-					 // ÃÖ´ë ÀÔ·Â ¹®ÀÚ¿­Àº 256 ¹ÙÀÌÆ®·Î Á¦ÇÑ
+					 // ìµœëŒ€ ì…ë ¥ ë¬¸ìì—´ì€ 256 ë°”ì´íŠ¸ë¡œ ì œí•œ
 					 else if (256 < nLength)
 					 {
-						  printf_s("-> ÃÖ´ë ¹®ÀÚ¿­ ¹ÙÀÌÆ®¸¦ ÃÊ°úÇÏ¿´½À´Ï´Ù.\n");
+						  printf_s("-> ìµœëŒ€ ë¬¸ìì—´ ë°”ì´íŠ¸ë¥¼ ì´ˆê³¼í•˜ì˜€ìŠµë‹ˆë‹¤.\n");
 						  //continue;
 					 }
-					 // Á¾·á Å°¿öµå "exit"
+					 // ì¢…ë£Œ í‚¤ì›Œë“œ "exit"
 					 else if (strBuffer.compare("exit") == 0)
 					 {
-						  printf_s("-> ÇÁ·Î±×·¥À» Á¾·áÇÕ´Ï´Ù.\n");
+						  printf_s("-> í”„ë¡œê·¸ë¨ì„ ì¢…ë£Œí•©ë‹ˆë‹¤.\n");
 						  break;
 					 }
 
@@ -228,25 +228,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 					 if (SOCKET_ERROR == iSendPacketSize)
 					 {
-						  sprintf_s(szBuffer, "[TCP Å¬¶óÀÌ¾ğÆ®] ¿¡·¯ ¹ß»ı -- send() :");
+						  sprintf_s(szBuffer, "[TCP í´ë¼ì´ì–¸íŠ¸] ì—ëŸ¬ ë°œìƒ -- send() :");
 						  err_display(szBuffer);
 						  break;
 					 }
 
-					 printf_s("[TCP Å¬¶óÀÌ¾ğÆ®] ÆĞÅ¶ ¼ö½Å <- %s( %d ¹ÙÀÌÆ® )\n", szBuffer, iSendPacketSize);
+					 printf_s("[TCP í´ë¼ì´ì–¸íŠ¸] íŒ¨í‚· ìˆ˜ì‹  <- %s( %d ë°”ì´íŠ¸ )\n", szBuffer, iSendPacketSize);
 
 					 break;
 				}
 				case FD_CLOSE:
 				{
-					 // server_sock ´İ±â
+					 // server_sock ë‹«ê¸°
 					 closesocket(server_sock);
 					 server_sock = INVALID_SOCKET;
 
-					 // À©¼Ó Á¾·á
+					 // ìœˆì† ì¢…ë£Œ
 					 WSACleanup();
 
-					 printf_s("[TCP Å¬¶óÀÌ¾ğÆ®] Á¾·á\n");
+					 printf_s("[TCP í´ë¼ì´ì–¸íŠ¸] ì¢…ë£Œ\n");
 
 					 return 0;
 				}
@@ -256,12 +256,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				return DefWindowProc(hWnd, message, wParam, lParam);
 	 }
 
-	 // À©¼Ó ÃÊ±âÈ­
+	 // ìœˆì† ì´ˆê¸°í™”
 
 	 return 0;
 }
 
-// À©µµ¿ì¿¡ ¶ç¿öÁÙ ¸Ş¼¼Áö ÇÔ¼ö
+// ìœˆë„ìš°ì— ë„ì›Œì¤„ ë©”ì„¸ì§€ í•¨ìˆ˜
 void DrawMessage(const char* msg)
 {
 	 static int msgline = 1;
