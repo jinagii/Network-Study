@@ -9,6 +9,6 @@ CLockPoint::CLockPoint(CRITICAL_SECTION* CS)
 
 CLockPoint::~CLockPoint()
 {
-	// return, break, continueµî¿¡¼­ ÀÚµ¿À¸·Î Ã³¸®
+	// return, break, continueÂµÃ®Â¿Â¡Â¼Â­ Ã€ÃšÂµÂ¿Ã€Â¸Â·ÃŽ ÃƒÂ³Â¸Â®
 	LeaveCriticalSection(m_CS);
 }
